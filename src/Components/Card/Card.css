@@ -1,0 +1,88 @@
+
+.card{
+    background:var(--secondary-alph);
+    min-width:300px;
+    margin: 10px;
+    border: 0.2rem solid #ffffff;
+    border-radius: .5rem;
+    box-shadow: 0 0 .2rem #ffffff,
+    0 0 .2rem #ffffff,
+    0 0 .5rem #bc13fe,
+    0 0 0.3rem #bc13fe,
+    0 0 .3rem #bc13fe,
+    inset 0 0 .3rem #bc13fe; 
+}
+
+.neon-text{
+    animation: pulsate 1.5s infinite alternate;
+    color: #fff;
+  }
+  @keyframes pulsate {
+    100% {
+      /* Larger blur radius */
+      text-shadow:
+        0 0 4px #fff,
+        0 0 11px #fff,
+        0 0 19px #fff,
+        0 0 20px #ec04d1,
+        0 0 25px #ec04d1,
+        0 0 20px #ec04d1,
+        0 0 20px #ec04d1,
+        0 0 20px #ec04d1;
+    }
+    0% {
+      /* Smaller blur radius */
+      text-shadow:
+        0 0 2px #fff,
+        0 0 4px #fff,
+        0 0 6px #fff,
+        0 0 10px #ec04d1,
+        0 0 23px #ec04d1,
+        0 0 35px #ec04d1,
+        0 0 20px #ec04d1,
+        0 0 20px #ec04d1;
+    }
+  }
+.card-title{
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 1.5rem;
+    text-transform: capitalize;
+    font-weight: 400;
+}
+.card-img{
+    display: block;
+    min-width: 250px;
+    height: auto;
+    margin: 0 auto;
+}
+.card-type-container{
+   display: flex;
+   justify-content: center;
+ }
+.card-type-title{
+  margin-right: 5px;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+.card-type{
+    display: inline-block;
+    translate: 5px -2px
+  }
+.card-type::after{
+    content: ",\00a0";
+ }
+ .card-type:last-child:after{
+    content: "";
+ }
+.card-number{
+    display: block;
+    text-align: end;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    font-weight: 200;
+}
+.card-number::before{
+    content: "No. \00a0";
+}
