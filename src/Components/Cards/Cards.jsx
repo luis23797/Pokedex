@@ -8,7 +8,7 @@ export default function Cards(){
     
     return(
         <>
-        {!isPending && <div className="container cards-container">{data.results.map(el=>(<Card key={el.url} url={el.url}/>))}</div>}
+        {!isPending && <div className="cards-container">{data.results.map(el=>(<Card key={el.url} url={el.url}/>))}</div>}
         </>
     )
 }

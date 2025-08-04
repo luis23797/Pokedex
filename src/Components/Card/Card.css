@@ -11,8 +11,13 @@
     0 0 0.3rem #bc13fe,
     0 0 .3rem #bc13fe,
     inset 0 0 .3rem #bc13fe; 
+    color: #fff;
+    height: 100%
 }
-
+.card:hover{
+  cursor: pointer;
+  background: rgba(2, 9, 213, 0.485);
+}
 .neon-text{
     animation: pulsate 1.5s infinite alternate;
     color: #fff;
@@ -85,4 +90,7 @@
 }
 .card-number::before{
     content: "No. \00a0";
+}
+.card:nth-child(even){
+    margin: 30px;
 }

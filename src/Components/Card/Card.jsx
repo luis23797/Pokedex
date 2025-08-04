@@ -2,7 +2,6 @@ import "./Card.css"
 import { useFetch } from "../../hooks/useFetch"
 export default function Card({url}){
     const {data,isPending,error} = useFetch(url);
-    console.log(data);
     return(
         <>
         {!isPending && 

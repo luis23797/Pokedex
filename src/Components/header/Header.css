@@ -1,0 +1,35 @@
+
+.header{
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background-color: rgba(18, 17, 17, 0.559);
+    color: #fff;
+    height: 5rem;
+    z-index: 1000;
+    transition: all ease 1s;
+}
+.header-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 2rem;
+    height: 100%;
+}
+.header-text{
+    display: inline-block;
+    padding: 0;
+    
+}
+.adjust{
+    background: #121111;
+    font-size: 1.2rem;
+    height: 7rem;
+}
+.links{
+    margin-top: .5rem;
+}
+.link{
+    margin: 1rem;
+    font-size: 1.3rem;
+}
