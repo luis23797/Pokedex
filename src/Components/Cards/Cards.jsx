@@ -5,6 +5,7 @@ import Card from "../Card/Card";
 
 export default function Cards(){
     const {data,isPending,error} = useFetch("https://pokeapi.co/api/v2/pokemon?limit=150&offset=0");
+    console.log(data);
     
     return(
         <>

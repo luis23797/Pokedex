@@ -1,0 +1,126 @@
+.container {
+  width: 80%;
+  margin: 2vw auto;
+  .img-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      min-height: 250px;
+    }
+  }
+  .info-container {
+    display: flex;
+    justify-content: center;
+    .col-1 {
+      display: flex;
+      flex-direction: column;
+      gap: 3vh;
+      .info {
+        .title {
+          border-bottom: 1px solid #6e6ea3;
+        }
+        .subtitle {
+          padding: 5px;
+        }
+      }
+    }
+    .col-2 {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      .info {
+        padding: 20px;
+        border: 1px solid #6e6ea3;
+        border-radius: 5px;
+        display: flex;
+        gap: 2vh;
+      }
+    }
+  }
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(3px, 5px, 8px);
+    .title {
+      text-align: center;
+      font-size: clamp(0.8rem, 1.6rem, 1.8rem);
+      font-weight: 800;
+      padding-bottom: 6px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: clamp(0.8rem, 1.2rem, 1.8rem);
+      font-weight: 800;
+    }
+  }
+  .movements {
+    display: flex;
+    margin-top: 3rem;
+    flex-direction: column;
+    gap: 10px;
+    .info {
+      width: 100%;
+      .title {
+        border-bottom: 1px solid #6e6ea3;
+        font-size: clamp(2rem, 3rem, 5rem);
+      }
+    }
+    .movements-grid {
+      display: grid;
+      grid-auto-rows: minmax(0, auto);
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.3rem;
+      padding: 3rem;
+      align-items: center;
+      
+      .level{
+        font-size: 1.3rem;
+        font-weight: 400;
+    
+      }
+      .method{
+        font-size: 1.3rem;
+        font-weight: 400;
+
+      }
+    }
+  }
+  @media screen and (max-width: 900px) {
+    & {
+      .info-container {
+        flex-direction: column;
+        gap: 3rem;
+      }
+      .movements {
+        .movements-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 1200px) {
+    & {
+      .movements {
+        .movements-grid {
+          grid-template-columns: 1fr 1fr 1fr;
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 750px) {
+    .movements {
+      .movements-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  }
+  @media screen and (max-width: 660px) {
+    .movements {
+      .movements-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+}

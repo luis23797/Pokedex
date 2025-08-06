@@ -40,6 +40,6 @@
     .home-container{
         grid-template-columns: 1fr;
         gap: 0;
-        height: auto;
+        height: 100vh;
     }
 }

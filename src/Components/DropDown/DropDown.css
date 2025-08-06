@@ -1,0 +1,46 @@
+.drop-container {
+  display: flex;
+  flex-direction: column;
+  background: var(--primary);
+  border-radius: 10px;
+  cursor: pointer;
+  user-select: none;
+  .drop-header {
+    text-align: center;
+    font-size: clamp(1vh, 2vh, 3vh);
+    background-color: rgb(85, 60, 107);
+    border-radius: 10px 10px 0 0;
+    padding: 5px;
+  }
+
+  .drop-body {
+    overflow: hidden;
+    transition: all 0.5s ease;
+    max-height: 0;
+    background-color: rgb(65, 63, 80);
+    border-radius: 0 0 10px 10px;
+  }
+  .drop-body.open {
+    max-height: 500px;
+    padding: 10px;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  & {
+    .drop-container:nth-child(even) {
+      .drop-header {
+        background: rgb(124, 119, 181);
+      }
+    }
+  }
+}
+@media screen and (min-width: 1201px) {
+  & {
+    .drop-container:nth-child(3n+1) {
+      .drop-header {
+        background: rgb(124, 119, 181);
+      }
+    }
+  }
+}

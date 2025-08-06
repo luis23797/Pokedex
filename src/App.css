@@ -1,10 +1,16 @@
-:root{
-  --primary:#494658;
-  --secondary:#0209d5;
-  --secondary-alph:rgba(2, 9, 213, 0.15);
+:root {
+  --primary: #494658;
+  --secondary: #0209d5;
+  --secondary-alph: rgba(2, 9, 213, 0.15);
 }
 
-body{
-  background: rgb(55,135,221);
-background: radial-gradient(circle, rgba(55,135,221,1) 0%, rgba(73,79,166,1) 0%, rgba(98,4,92,1) 100%);
+body {
+  background: rgb(55, 135, 221);
+  background: radial-gradient(
+    circle,
+    rgba(55, 135, 221, 1) 0%,
+    rgba(73, 79, 166, 1) 0%,
+    rgba(98, 4, 92, 1) 100%
+  );
+  min-height: 100vh;
 }

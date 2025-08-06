@@ -4,6 +4,7 @@ import './App.css'
 import Cards from './Components/Cards/Cards'
 import Header from './Components/header/Header'
 import Home from './Components/Home/Home'
+import { Detail } from './Components/layout/detail/Detail'
 
 function App() {
 
@@ -17,7 +18,7 @@ function App() {
         <Route index element={<Home/>} />
         <Route path='cards'>
         <Route index element={<Cards/>}/>
-        <Route path=':id' element={<h1>hello</h1>}/>
+        <Route path=':id' element={<Detail/>}/>
         </Route>
         </Route>
         <Route path='*' element={<h1>Not found</h1>} />
