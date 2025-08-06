@@ -12,5 +12,5 @@ body {
     rgba(73, 79, 166, 1) 0%,
     rgba(98, 4, 92, 1) 100%
   );
-  min-height: 100vh;
+  height: 100%;
 }

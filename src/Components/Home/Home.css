@@ -6,8 +6,9 @@
     justify-items: center;
     align-items: center;
     background-color: rgba(8, 4, 25, 0.249);
-    height: calc(100vh - 80px);
+    min-height: calc(100vh - 80px);
     transition: all 1s;
+    height:auto
 }
 
 .img{
@@ -36,10 +37,14 @@
     filter: blur(0);
     transform: translateX(0);
 }
+.hidden,
+.show {
+  transition: all 0.8s ease;
+  will-change: transform, opacity, filter;
+}
 @media (max-width:700px) {
     .home-container{
         grid-template-columns: 1fr;
         gap: 0;
-        height: 100vh;
     }
 }
