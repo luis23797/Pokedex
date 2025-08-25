@@ -5,7 +5,7 @@
   margin: 2rem auto;
   animation: show 1s;
   width: 90%;
-
+  
   @media (max-width: 700px) {
     & {
       width: 100%;

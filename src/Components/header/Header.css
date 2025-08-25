@@ -9,6 +9,10 @@
     z-index: 1000;
     transition: all ease 1s;
     min-width: 300px;
+      @media (max-width: 768px) {
+
+        height: auto;
+      }
    
 }
 .header-container{
