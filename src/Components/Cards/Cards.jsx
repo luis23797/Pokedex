@@ -11,26 +11,66 @@ import Card from "../Card/Card";
 import Search from "../Search/Search";
 
 export default function Cards() {
+  const baseUrl = "https://pokeapi.co/api/v2/pokemon";
+  const limit = 30;
+  const [offset, setOffset] = useState(0);
+  const loaderRef = useRef();
+  const [search, setSearch] = useState();
   const { data, isPending, error } = useFetch(
-    "https://pokeapi.co/api/v2/pokemon?limit=150&offset=0"
+    `${baseUrl}?limit=${limit}&offset=${offset}`
   );
+
+  const {
+    data:searchData,
+    error:searchError
+  } = useFetch(search? `${baseUrl}/${search.toLowerCase()}`:null);
+
   const cards = useRef();
   const [visible, setVisible] = useState(false);
-  const [search, setSearch] = useState();
+  const [currentData, setCurrentData] = useState([]);
   useEffect(() => {
     const timer = setTimeout(() => {
       setVisible(true);
     }, 300);
-    return () => clearTimeout(timer);
-  }, []);
 
+    if(search) return;
+
+     const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setOffset((prev)=>prev+limit)
+        }
+      },
+      { threshold: 1.0}
+    );
+
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+    return () => {
+      clearTimeout(timer);
+      observer.disconnect();
+    }
+  }, [isPending,search]);
+
+  useEffect(() => {
+    if (data) {
+      setCurrentData((prev) => [...prev, ...data.results])
+    }
+  }, [data])
+  
   const pokemons = useMemo(() => {
-    if (!data) return [];
-    if (!search) return data.results;
-    return data.results.filter((p) =>
+    console.log(searchData);
+    
+    if(searchData?.name){
+      return [{ name: searchData.name, url: `${baseUrl}/${searchData.id}` }];
+    }
+    if (currentData.length <= 0) return [];
+    if (!search) return currentData;
+    return currentData.filter((p) =>
       p.name.toLowerCase().includes(search.toLowerCase())
     );
-  }, [data, search]);
+  }, [currentData, search]);
 
   if (error?.err) return <p>Error:</p>;
   if (isPending) return <p>Cargando...</p>;
@@ -42,6 +82,8 @@ export default function Cards() {
           {pokemons.map((el) => (
             <Card key={el.url} url={el.url} />
           ))}
+        {!search && <div ref={loaderRef} style={{ height: "20px" }}></div>}
+        {pokemons.length==0 && <div >No se encontraron Pokemons {search}</div>}
         </div>
       )}
     </>

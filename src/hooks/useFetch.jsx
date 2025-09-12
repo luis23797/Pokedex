@@ -4,27 +4,43 @@ export function useFetch(url){
     const [data,setData] = useState(null);
     const [isPending,setPending] = useState(true);
     const [error,setError] = useState(null);
+
     useEffect(()=>{
+        const controller = new AbortController();
+
         const getData = async(url)=>{
             try{
-                const res = await fetch(url);
+                const res = await fetch(url, { signal: controller.signal });
+
                 if(!res.ok){
-                    throw{
-                        err:true,
-                        status:res.status,
-                        statusText:!res.statusText? 'Ocurrio un error':res.statusText,
-                    }
+                    // controlamos 404 específicamente
+                    const customError = {
+                        err: true,
+                        status: res.status,
+                        statusText: res.status === 404 ? 'Not Found' : res.statusText || 'Ocurrió un error'
+                    };
+                    setData(null);
+                    setPending(false);
+                    return setError(customError); // ya atrapado, no se propaga
                 }
-                let data = await res.json();
+
+                const json = await res.json();
+                setData(json);
                 setPending(false);
-                setData(data);
-                setError({err:false});
-            }catch(error){
-              setPending(false);
-              setError(error);  
+                setError({ err:false });
+            }catch(err){
+                if(err.name !== "AbortError"){ // ignoramos abortos
+                    setData(null);
+                    setPending(false);
+                    setError({ err:true, status: null, statusText: err.message || 'Error' });
+                }
             }
         }
-        getData(url);
-    },[url])
+
+        if(url) getData(url);
+
+        return () => controller.abort();
+    },[url]);
+
     return {data,isPending,error};
 }
