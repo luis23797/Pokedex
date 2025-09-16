@@ -22,7 +22,8 @@ export default function Cards() {
 
   const {
     data:searchData,
-    error:searchError
+    error:searchError,
+    isPending:searchPending
   } = useFetch(search? `${baseUrl}/${search.toLowerCase()}`:null);
 
   const cards = useRef();
@@ -61,6 +62,7 @@ export default function Cards() {
   
   const pokemons = useMemo(() => {
     console.log(searchData);
+    console.log(search);
     
     if(searchData?.name){
       return [{ name: searchData.name, url: `${baseUrl}/${searchData.id}` }];
@@ -70,10 +72,12 @@ export default function Cards() {
     return currentData.filter((p) =>
       p.name.toLowerCase().includes(search.toLowerCase())
     );
-  }, [currentData, search]);
-
+  }, [currentData, search, searchData, searchError]);
+  console.log(searchPending);
+  
   if (error?.err) return <p>Error:</p>;
-  if (isPending) return <p>Cargando...</p>;
+  if (search && searchPending) return <p>Buscando Pokémon...</p>;
+  if (isPending ) return <p>Cargando...</p>;
   return (
     <>
       <Search setSearch={setSearch} />

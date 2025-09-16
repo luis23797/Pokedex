@@ -1,18 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
-export function useFetch(url){
-    const [data,setData] = useState(null);
-    const [isPending,setPending] = useState(true);
-    const [error,setError] = useState(null);
+export function useFetch(url) {
+    const [data, setData] = useState(null);
+    const [isPending, setPending] = useState(true);
+    const [error, setError] = useState(null);
+    useEffect(() => {
 
-    useEffect(()=>{
         const controller = new AbortController();
 
-        const getData = async(url)=>{
-            try{
+
+        const getData = async (url) => {
+            try {
                 const res = await fetch(url, { signal: controller.signal });
 
-                if(!res.ok){
+                if (!res.ok) {
                     // controlamos 404 específicamente
                     const customError = {
                         err: true,
@@ -27,20 +28,20 @@ export function useFetch(url){
                 const json = await res.json();
                 setData(json);
                 setPending(false);
-                setError({ err:false });
-            }catch(err){
-                if(err.name !== "AbortError"){ // ignoramos abortos
+                setError({ err: false });
+            } catch (err) {
+                if (err.name !== "AbortError") { // ignoramos abortos
                     setData(null);
                     setPending(false);
-                    setError({ err:true, status: null, statusText: err.message || 'Error' });
+                    setError({ err: true, status: null, statusText: err.message || 'Error' });
                 }
             }
         }
 
-        if(url) getData(url);
+        if (url) getData(url);
 
         return () => controller.abort();
-    },[url]);
+    }, [url]);
 
-    return {data,isPending,error};
+    return { data, isPending, error };
 }
