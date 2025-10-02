@@ -14,12 +14,12 @@ export default function Cards() {
   const baseUrl = "https://pokeapi.co/api/v2/pokemon";
   const limit = 30;
   const [offset, setOffset] = useState(0);
-  const loaderRef = useRef();
+  const loaderRef = useRef(null);
   const [search, setSearch] = useState();
   const { data, isPending, error } = useFetch(
     `${baseUrl}?limit=${limit}&offset=${offset}`
   );
-
+  
   const {
     data:searchData,
     error:searchError,
@@ -29,40 +29,47 @@ export default function Cards() {
   const cards = useRef();
   const [visible, setVisible] = useState(false);
   const [currentData, setCurrentData] = useState([]);
+  const offsetRef = useRef(offset);
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setVisible(true);
-    }, 300);
+  offsetRef.current = offset; // sincroniza cada vez que offset cambie
+}, [offset]);
 
-    if(search) return;
-
-     const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setOffset((prev)=>prev+limit)
-        }
-      },
-      { threshold: 1.0}
-    );
-
-    if (loaderRef.current) {
-      observer.observe(loaderRef.current);
+  useEffect(() => {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      
+      
+      if (entries[0].isIntersecting && offsetRef.current + limit <1300) {
+        console.log(offsetRef.current);
+        
+        setOffset(prev => prev + limit);
+      }
+      if (offsetRef.current + limit >= 1300) {
+      observer.disconnect(); // 👈 ya no sigue observando
     }
-    return () => {
-      clearTimeout(timer);
-      observer.disconnect();
-    }
-  }, [isPending,search]);
+    },
+    { threshold: 1.0 }
+  );
+
+   observer.observe(loaderRef.current);
+
+  return () => {
+      if (loaderRef.current){
+    observer.unobserve(loaderRef.current);
+  }
+  }
+}, []);
 
   useEffect(() => {
     if (data) {
       setCurrentData((prev) => [...prev, ...data.results])
+      console.log(data);
+      
     }
   }, [data])
   
   const pokemons = useMemo(() => {
-    console.log(searchData);
-    console.log(search);
     
     if(searchData?.name){
       return [{ name: searchData.name, url: `${baseUrl}/${searchData.id}` }];
@@ -73,23 +80,34 @@ export default function Cards() {
       p.name.toLowerCase().includes(search.toLowerCase())
     );
   }, [currentData, search, searchData, searchError]);
-  console.log(searchPending);
   
-  if (error?.err) return <p>Error:</p>;
-  if (search && searchPending) return <p>Buscando Pokémon...</p>;
-  if (isPending ) return <p>Cargando...</p>;
+ useEffect(() => {
+  console.log("isPending en componente:", isPending);
+}, [searchPending]); // ✅ se loguea cada vez que cambia
+  
+  
+ 
   return (
     <>
       <Search setSearch={setSearch} />
-      {!isPending && (
-        <div className={`cards-container ${visible ? "show" : ""}`} ref={cards}>
-          {pokemons.map((el) => (
+       <div className={`cards-container`} ref={cards}>
+        {pokemons.length>0 && pokemons.map((el) => (
             <Card key={el.url} url={el.url} />
           ))}
-        {!search && <div ref={loaderRef} style={{ height: "20px" }}></div>}
-        {pokemons.length==0 && <div >No se encontraron Pokemons {search}</div>}
-        </div>
-      )}
+         
+      {isPending && (
+        <>
+          <p style={{position:"fixed", bottom:10}}>Cargando...</p>
+        {(error?.err) && <p>Error:</p>}
+         
+     
+        </>
+      )
+      }
+        {(search && searchPending) && <p>Buscando Pokémon...</p>}
+        {(pokemons.length==0 && !searchPending) && <div >No se encontraron Pokemons {search}</div>}
+      </div>
+      <div  ref={loaderRef} style={{ height: "20px",opacity:"0"}}>hello</div>
     </>
   );
 }

@@ -4,15 +4,18 @@ export function useFetch(url) {
     const [data, setData] = useState(null);
     const [isPending, setPending] = useState(true);
     const [error, setError] = useState(null);
+
+
     useEffect(() => {
-
+  
         const controller = new AbortController();
-
-
+        setPending(true);
         const getData = async (url) => {
+           
             try {
+               
                 const res = await fetch(url, { signal: controller.signal });
-
+                
                 if (!res.ok) {
                     // controlamos 404 específicamente
                     const customError = {
@@ -21,6 +24,7 @@ export function useFetch(url) {
                         statusText: res.status === 404 ? 'Not Found' : res.statusText || 'Ocurrió un error'
                     };
                     setData(null);
+                    
                     setPending(false);
                     return setError(customError); // ya atrapado, no se propaga
                 }
