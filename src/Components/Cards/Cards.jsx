@@ -15,19 +15,22 @@ export default function Cards() {
   const baseUrl = "https://pokeapi.co/api/v2/pokemon";
   const limit = 30;
   const [offset, setOffset] = useState(0);
+  const [searchResult, setSearchResult] = useState([]);
+   const [searchOffset, setSearchOffset] = useState(0);
   const loaderRef = useRef(null);
   const [search, setSearch] = useState();
   const { data, isPending, error } = useFetch(
     `${baseUrl}?limit=${limit}&offset=${offset}`
   );
   const debounceSearch = useDebounce(search);
-  const searchUrl = debounceSearch ? `${baseUrl}/${debounceSearch.toLowerCase()}` : null;
+  // const searchUrl = debounceSearch ? `${baseUrl}?limit=100&offset=${searchOffset}` : null;
+  const searchUrl = `${baseUrl}?limit=100&offset=${searchOffset}`;
   const {
     data: searchData,
     error: searchError,
     isPending: searchPending
   } = useFetch(searchUrl);
-
+  
   const cards = useRef();
   const [visible, setVisible] = useState(false);
   const [currentData, setCurrentData] = useState([]);
@@ -74,13 +77,36 @@ export default function Cards() {
 
  // en Cards.jsx
 useEffect(() => {
-  if (search) {
-    setIsSearching(true); // apenas el usuario escribe algo
-  } else {
-    setIsSearching(false); // si borró la búsqueda
+  if (!search){
+    setIsSearching(false);
+    return;
   }
+  setIsSearching(true);
+  setSearchOffset(0);
+  setSearchResult([]);
 }, [search]);
 
+
+useEffect(() => {  
+  
+  if (!search) return;
+  if (!searchData || searchPending) return; // esperamos a que cargue
+
+  const filteredData = searchData.results.filter(p =>
+    p.name.toLowerCase().includes(search.toLowerCase())
+  );
+  console.log(searchOffset);
+  if(searchOffset >= 1300) return;
+  if (filteredData.length > 0) {
+    // ✅ encontramos resultados o llegamos al límite
+    setSearchResult(filteredData);
+    setIsSearching(false);
+  } else {
+    // 🚀 seguimos buscando en la siguiente página
+    setSearchOffset(prev => prev + 100);
+  }
+}, [searchData, debounceSearch]);
+ 
   useEffect(() => {
     if (!searchPending) {
       const timer = setTimeout(() => setIsSearching(false), 300);
@@ -89,15 +115,18 @@ useEffect(() => {
   }, [searchPending]);
   const pokemons = useMemo(() => {
 
-    if (searchData?.name) {
-      return [{ name: searchData.name, url: `${baseUrl}/${searchData.id}` }];
-    }
-    if (currentData.length <= 0 || (search && !isSearching)) return [];
+    // if (searchData?.name) {
+    //   return [{ name: searchData.name, url: `${baseUrl}/${searchData.id}` }];
+    // }
+    // if (currentData.length <= 0 || (search && !isSearching)) return [];
+    if (currentData.length <= 0) return [];
     if (!search) return currentData;
-    return currentData.filter((p) =>
-      p.name.toLowerCase().includes(search.toLowerCase())
-    );
-  }, [currentData, search, searchData, searchError]);
+    if(searchResult.length>=0) return searchResult;
+    return [];
+    // return searchData.filter((p) =>
+    //   p.name.toLowerCase().includes(search.toLowerCase())
+    // );
+  }, [currentData, search, searchData, searchError,searchResult]);
 
   useEffect(() => {
     console.log("isPending en componente:", searchPending);
