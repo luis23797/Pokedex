@@ -75,23 +75,31 @@
       gap: 1.3rem;
       padding: 3rem;
       align-items: center;
-      .body-container{
+      .body-container {
         padding: 2px;
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 3px;
-        .level{
-        font-size: 1.3rem;
-        font-weight: 400;
+        .level {
+          font-size: 1.3rem;
+          font-weight: 400;
+           @media (max-width: 830px) {
+            & {
+             font-size: .9rem;
+            }
+          }
+        }
+        .method {
+          font-size: 1.3rem;
+          font-weight: 400;
+           @media (max-width: 830px) {
+            & {
+             font-size: .9rem;
+            }
+          }
+        }
       }
-      .method{
-        
-        font-size: 1.3rem;
-        font-weight: 400;
-      }
-      }
-      
     }
   }
   @media screen and (max-width: 900px) {
