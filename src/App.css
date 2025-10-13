@@ -5,6 +5,8 @@
 }
 
 body {
+  will-change: transform, opacity;
+  transform: translateZ(0);
   background: rgb(55, 135, 221);
   background: radial-gradient(
     circle,

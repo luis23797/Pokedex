@@ -5,16 +5,26 @@
   margin: 2rem auto;
   animation: show 1s;
   width: 90%;
-   min-height: 150vh; /* al menos 1.5 veces la pantalla */
+  min-height: 150vh;
   overflow-y: auto;
-  @media (max-width: 700px) {
+
+  @media (max-width: 830px) {
     & {
-      width: 100%;
+      /* width: 100%;
       margin: 2rem 0;
-      justify-content: center;
+      justify-content: center; */
+      width: 100%;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      justify-content: center; /* 👈 centra las columnas sobrantes */
+      grid-template-rows: repeat(4, 1fr);
+      gap: 2rem;
+      overflow: hidden;
     }
   }
 }
+
 @keyframes show {
   0% {
     opacity: 0;

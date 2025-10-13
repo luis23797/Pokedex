@@ -14,6 +14,13 @@
     color: #fff;
     height: 100%;
     padding-top: 10px;
+     @media (max-width: 830px) {
+     & {
+      min-width: 150px;
+      margin: 0;
+      height: auto;
+    }
+  }
 }
 .card:hover{
   cursor: pointer;
@@ -56,12 +63,22 @@
     font-size: 1.5rem;
     text-transform: capitalize;
     font-weight: 400;
+     @media (max-width: 830px) {
+     & {
+      font-size: 1.2rem;
+    }
+  }
 }
 .card-img{
     display: block;
     min-width: 250px;
     height: auto;
     margin: 0 auto;
+    @media (max-width: 830px) {
+    & {
+      min-width: 150px;
+    }
+  }
 }
 .card-type-container{
    display: flex;
@@ -71,10 +88,20 @@
   margin-right: 5px;
   font-weight: bold;
   font-size: 1.1rem;
+    @media (max-width: 830px) {
+     & {
+      font-size: .8rem;
+    }
+  }
 }
 .card-type{
     display: inline-block;
-    translate: 5px -2px
+    translate: 5px -2px;
+    @media (max-width: 830px) {
+     & {
+      font-size: .8rem;
+    }
+  }
   }
 .card-type::after{
     content: ",\00a0";
@@ -88,10 +115,20 @@
     margin-bottom: 10px;
     margin-right: 10px;
     font-weight: 200;
+    @media (max-width: 830px) {
+     & {
+      font-size: .9rem;
+    }
+  }
 }
 .card-number::before{
     content: "No. \00a0";
 }
 .card:nth-child(even){
     margin: 30px;
+      @media (max-width: 830px) {
+     & {
+      margin: 0;
+    }
+  }
 }

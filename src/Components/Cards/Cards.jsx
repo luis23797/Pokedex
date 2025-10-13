@@ -124,7 +124,7 @@ export default function Cards() {
         {search && isSearching && <Spinner message={"Buscando Pokemon"}/>}
 
         {search && !isSearching && pokemons.length === 0 && (
-          <div>No se encontraron Pokemons {search}</div>
+          <div style={{width:"100%",textAlign:"center"}}>No se encontraron Pokemons {search}</div>
         )}
         {pokemons.length > 0 &&
           !isSearching &&

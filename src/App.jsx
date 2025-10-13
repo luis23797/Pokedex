@@ -1,31 +1,28 @@
-
-import { Route, Routes } from 'react-router-dom'
-import './App.css'
-import Cards from './Components/Cards/Cards'
-import Header from './Components/header/Header'
-import Home from './Components/layout/Home/Home'
-import { Detail } from './Components/layout/detail/Detail'
+import { Route, Routes } from "react-router-dom";
+import "./App.css";
+import Cards from "./Components/Cards/Cards";
+import Header from "./Components/header/Header";
+import Home from "./Components/layout/Home/Home";
+import { Detail } from "./Components/layout/detail/Detail";
 
 function App() {
-
   return (
     <>
       {/* <Header/>
       <Cards/> */}
-
-      <Routes>
-        <Route path='/' element={<Header/>}>
-        <Route index element={<Home/>} />
-        <Route path='cards'>
-        <Route index element={<Cards/>}/>
-        <Route path=':id' element={<Detail/>}/>
-        </Route>
-        </Route>
-        <Route path='*' element={<h1>Not found</h1>} />
-      </Routes>
+     
+          <Routes>
+            <Route path="/" element={<Header />}>
+              <Route index element={<Home />} />
+              <Route path="cards">
+                <Route index element={<Cards />} />
+                <Route path=":id" element={<Detail />} />
+              </Route>
+            </Route>
+            <Route path="*" element={<h1>Not found</h1>} />
+          </Routes>
     </>
-    
-  )
+  );
 }
 
-export default App
+export default App;
