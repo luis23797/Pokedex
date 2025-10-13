@@ -7,7 +7,7 @@ export function Detail() {
   const { data, isPending, error } = useFetch(
     `https://pokeapi.co/api/v2/pokemon/${id}/`
   );
-  console.log(data);
+  // console.log(data);
   let types = !isPending
     ? data.types.reduce(
         (prev, curr, i) =>
@@ -17,7 +17,6 @@ export function Detail() {
         ""
       )
     : "";
-  console.log(types);
 
   return (
     <>
@@ -53,12 +52,20 @@ export function Detail() {
               <h1 className="title">Movements</h1>
             </div>
             <div className="movements-grid">
-            {data.moves.map(move=>(
-              <DropDown header={move.move.name} key={move.move.name}>
-                <h2 className="level">Learned at : {move.version_group_details[0].level_learned_at}</h2>
-                <h2 className="method">Learn method : {move.version_group_details[0].move_learn_method.name}</h2>
-              </DropDown>
-            ))}
+              {data.moves.map((move) => (
+                <DropDown header={move.move.name} key={move.move.name}>
+                  <div className="body-container">
+                    <h2 className="level">
+                      Learned at :{" "}
+                      {move.version_group_details[0].level_learned_at}
+                    </h2>
+                    <h2 className="method">
+                      Learn method :{" "}
+                      {move.version_group_details[0].move_learn_method.name}
+                    </h2>
+                  </div>
+                </DropDown>
+              ))}
             </div>
           </div>
         </div>

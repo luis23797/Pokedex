@@ -1,0 +1,27 @@
+.spinner-container{
+    display: flex;
+    position: absolute;
+    align-items: center;
+    gap: 5px;
+    span{
+        display:inline-block;
+        width:3rem;
+        height:5em;
+        svg{
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
+.rotate {
+  animation: rotation 2s infinite linear; 
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg); 
+  }
+  100% {
+    transform: rotate(360deg); 
+  }
+}

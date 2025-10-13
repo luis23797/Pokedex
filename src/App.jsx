@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router-dom'
 import './App.css'
 import Cards from './Components/Cards/Cards'
 import Header from './Components/header/Header'
-import Home from './Components/Home/Home'
+import Home from './Components/layout/Home/Home'
 import { Detail } from './Components/layout/detail/Detail'
 
 function App() {

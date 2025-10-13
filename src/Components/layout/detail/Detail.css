@@ -69,22 +69,29 @@
     }
     .movements-grid {
       display: grid;
+      text-transform: capitalize;
       grid-auto-rows: minmax(0, auto);
       grid-template-columns: repeat(4, 1fr);
       gap: 1.3rem;
       padding: 3rem;
       align-items: center;
-      
-      .level{
+      .body-container{
+        padding: 2px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        .level{
         font-size: 1.3rem;
         font-weight: 400;
-    
       }
       .method{
+        
         font-size: 1.3rem;
         font-weight: 400;
-
       }
+      }
+      
     }
   }
   @media screen and (max-width: 900px) {

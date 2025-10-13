@@ -10,13 +10,14 @@ import { useFetch } from "../../hooks/useFetch";
 import Card from "../Card/Card";
 import Search from "../Search/Search";
 import useDebounce from "../../hooks/useDebounce";
+import Spinner from "../Utilities/Spinner/Spinner";
 
 export default function Cards() {
   const baseUrl = "https://pokeapi.co/api/v2/pokemon";
   const limit = 30;
   const [offset, setOffset] = useState(0);
   const [searchResult, setSearchResult] = useState([]);
-   const [searchOffset, setSearchOffset] = useState(0);
+  const [searchOffset, setSearchOffset] = useState(0);
   const loaderRef = useRef(null);
   const [search, setSearch] = useState();
   const { data, isPending, error } = useFetch(
@@ -28,9 +29,9 @@ export default function Cards() {
   const {
     data: searchData,
     error: searchError,
-    isPending: searchPending
+    isPending: searchPending,
   } = useFetch(searchUrl);
-  
+
   const cards = useRef();
   const [visible, setVisible] = useState(false);
   const [currentData, setCurrentData] = useState([]);
@@ -43,15 +44,11 @@ export default function Cards() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-
-
         if (entries[0].isIntersecting && offsetRef.current + limit < 1300) {
-          console.log(offsetRef.current);
-
-          setOffset(prev => prev + limit);
+          setOffset((prev) => prev + limit);
         }
         if (offsetRef.current + limit >= 1300) {
-          observer.disconnect(); // 👈 ya no sigue observando
+          observer.disconnect(); //  ya no sigue observando
         }
       },
       { threshold: 1.0 }
@@ -63,50 +60,46 @@ export default function Cards() {
       if (loaderRef.current) {
         observer.unobserve(loaderRef.current);
       }
-    }
+    };
   }, []);
 
   useEffect(() => {
     if (data) {
-      setCurrentData((prev) => [...prev, ...data.results])
-      console.log(data);
-
+      setCurrentData((prev) => [...prev, ...data.results]);
+      // console.log(data);
     }
-  }, [data])
+  }, [data]);
   const [isSearching, setIsSearching] = useState(false);
 
- // en Cards.jsx
-useEffect(() => {
-  if (!search){
-    setIsSearching(false);
-    return;
-  }
-  setIsSearching(true);
-  setSearchOffset(0);
-  setSearchResult([]);
-}, [search]);
+  // en Cards.jsx
+  useEffect(() => {
+    if (!search) {
+      setIsSearching(false);
+      return;
+    }
+    setIsSearching(true);
+    setSearchOffset(0);
+    setSearchResult([]);
+  }, [search]);
 
+  useEffect(() => {
+    if (!search) return;
+    if (!searchData || searchPending) return; // esperamos a que cargue
+    if (searchOffset >= 1300) return;
 
-useEffect(() => {  
-  
-  if (!search) return;
-  if (!searchData || searchPending) return; // esperamos a que cargue
+    const filteredData = searchData.results.filter((p) =>
+      p.name.toLowerCase().includes(search.toLowerCase())
+    );
+    if (filteredData.length > 0) {
+      // ✅ encontramos resultados o llegamos al límite
+      setSearchResult(filteredData);
+      setIsSearching(false);
+    } else {
+      // 🚀 seguimos buscando en la siguiente página
+      setSearchOffset((prev) => prev + 100);
+    }
+  }, [searchData, debounceSearch]);
 
-  const filteredData = searchData.results.filter(p =>
-    p.name.toLowerCase().includes(search.toLowerCase())
-  );
-  console.log(searchOffset);
-  if(searchOffset >= 1300) return;
-  if (filteredData.length > 0) {
-    // ✅ encontramos resultados o llegamos al límite
-    setSearchResult(filteredData);
-    setIsSearching(false);
-  } else {
-    // 🚀 seguimos buscando en la siguiente página
-    setSearchOffset(prev => prev + 100);
-  }
-}, [searchData, debounceSearch]);
- 
   useEffect(() => {
     if (!searchPending) {
       const timer = setTimeout(() => setIsSearching(false), 300);
@@ -114,52 +107,38 @@ useEffect(() => {
     }
   }, [searchPending]);
   const pokemons = useMemo(() => {
-
-    // if (searchData?.name) {
-    //   return [{ name: searchData.name, url: `${baseUrl}/${searchData.id}` }];
-    // }
-    // if (currentData.length <= 0 || (search && !isSearching)) return [];
     if (currentData.length <= 0) return [];
     if (!search) return currentData;
-    if(searchResult.length>=0) return searchResult;
+    if (searchResult.length >= 0) return searchResult;
     return [];
-    // return searchData.filter((p) =>
-    //   p.name.toLowerCase().includes(search.toLowerCase())
-    // );
-  }, [currentData, search, searchData, searchError,searchResult]);
+  }, [currentData, search, searchData, searchError, searchResult]);
 
-  useEffect(() => {
-    console.log("isPending en componente:", searchPending);
-  }, [searchPending]); // ✅ se loguea cada vez que cambia
-
-
+  // useEffect(() => {
+  //   // console.log("isPending en componente:", searchPending);
+  // }, [searchPending]); // ✅ se loguea cada vez que cambia
 
   return (
     <>
       <Search setSearch={setSearch} />
       <div className={`cards-container`} ref={cards}>
-      {search && isSearching && <p>Buscando Pokémon...</p>}
+        {search && isSearching && <Spinner message={"Buscando Pokemon"}/>}
 
-{search && !isSearching && pokemons.length === 0 && (
-  <div>No se encontraron Pokemons {search}</div>
-)}
-
-        {((pokemons.length > 0 && !isSearching)) && pokemons.map((el) => (
-          <Card key={el.url} url={el.url} />
-        ))}
-
+        {search && !isSearching && pokemons.length === 0 && (
+          <div>No se encontraron Pokemons {search}</div>
+        )}
+        {pokemons.length > 0 &&
+          !isSearching &&
+          pokemons.map((el) => <Card key={el.url} url={el.url} />)}
         {isPending && (
           <>
-            <p style={{ position: "fixed", bottom: 10 }}>Cargando...</p>
-            {(error?.err) && <p>Error:</p>}
-
-
+            <Spinner message={"Cargando"}  containerOptions={{position:"fixed",bottom:10}}/>
+            {error?.err && <p>Error:</p>}
           </>
-        )
-        }
-
+        )}
       </div>
-      <div ref={loaderRef} style={{ height: "20px", opacity: "0" }}>hello</div>
+      <div ref={loaderRef} style={{ height: "20px", opacity: "0" }}>
+        hello
+      </div>
     </>
   );
 }
