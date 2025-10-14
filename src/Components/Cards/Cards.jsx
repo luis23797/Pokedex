@@ -23,7 +23,7 @@ export default function Cards() {
   const { data, isPending, error } = useFetch(
     `${baseUrl}?limit=${limit}&offset=${offset}`
   );
-  const debounceSearch = useDebounce(search);
+  const debounceSearch = useDebounce(search,700);
   // const searchUrl = debounceSearch ? `${baseUrl}?limit=100&offset=${searchOffset}` : null;
   const searchUrl = `${baseUrl}?limit=100&offset=${searchOffset}`;
   const {
@@ -44,6 +44,9 @@ export default function Cards() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
+        if(search){
+          return;
+        }
         if (entries[0].isIntersecting && offsetRef.current + limit < 1300) {
           setOffset((prev) => prev + limit);
         }
