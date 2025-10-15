@@ -23,7 +23,7 @@ export default function Cards() {
   const { data, isPending, error } = useFetch(
     `${baseUrl}?limit=${limit}&offset=${offset}`
   );
-  const debounceSearch = useDebounce(search,700);
+  const debounceSearch = useDebounce(search,900);
   // const searchUrl = debounceSearch ? `${baseUrl}?limit=100&offset=${searchOffset}` : null;
   const searchUrl = `${baseUrl}?limit=100&offset=${searchOffset}`;
   const {
@@ -36,6 +36,8 @@ export default function Cards() {
   const [visible, setVisible] = useState(false);
   const [currentData, setCurrentData] = useState([]);
   const offsetRef = useRef(offset);
+
+  const [searchCache,SetSearchCache] = useState();
 
   useEffect(() => {
     offsetRef.current = offset; // sincroniza cada vez que offset cambie
@@ -97,6 +99,8 @@ export default function Cards() {
       // ✅ encontramos resultados o llegamos al límite
       setSearchResult(filteredData);
       setIsSearching(false);
+
+      SetSearchCache(searchData);
     } else {
       // 🚀 seguimos buscando en la siguiente página
       setSearchOffset((prev) => prev + 100);
@@ -134,7 +138,7 @@ export default function Cards() {
           pokemons.map((el) => <Card key={el.url} url={el.url} />)}
         {isPending && (
           <>
-            <Spinner message={"Cargando"}  containerOptions={{position:"fixed",bottom:10}}/>
+            {searchCache!=searchData && <Spinner message={"Cargando"}  containerOptions={{position:"fixed",bottom:10}}/>}
             {error?.err && <p>Error:</p>}
           </>
         )}
