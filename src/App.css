@@ -26,4 +26,7 @@ body::before {
   background-repeat: no-repeat;
   will-change: transform; /* 👈 fuerza renderización por GPU */
   transform: translateZ(0); /* 👈 evita flickering */
+    @media (max-width:700px) {
+    background: rgb(24, 8, 48);
+  }
 }
