@@ -10,17 +10,18 @@ function App() {
     <>
       {/* <Header/>
       <Cards/> */}
-     
-          <Routes>
-            <Route path="/" element={<Header />}>
-              <Route index element={<Home />} />
-              <Route path="cards">
-                <Route index element={<Cards />} />
-                <Route path=":id" element={<Detail />} />
-              </Route>
+      <div className="bg">
+        <Routes>
+          <Route path="/" element={<Header />}>
+            <Route index element={<Home />} />
+            <Route path="cards">
+              <Route index element={<Cards />} />
+              <Route path=":id" element={<Detail />} />
             </Route>
-            <Route path="*" element={<h1>Not found</h1>} />
-          </Routes>
+          </Route>
+          <Route path="*" element={<h1>Not found</h1>} />
+        </Routes>
+      </div>
     </>
   );
 }

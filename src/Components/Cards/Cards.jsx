@@ -37,7 +37,6 @@ export default function Cards() {
   const [currentData, setCurrentData] = useState([]);
   const offsetRef = useRef(offset);
 
-  const [searchCache,SetSearchCache] = useState();
 
   useEffect(() => {
     offsetRef.current = offset; // sincroniza cada vez que offset cambie
@@ -87,7 +86,13 @@ export default function Cards() {
     setSearchResult([]);
   }, [search]);
 
-  useEffect(() => {
+  //-------------------------------------------- Pruebas----------------------------------------------------------------------------------
+  useEffect(()=>{
+    console.log(debounceSearch);
+    
+  },[debounceSearch]) 
+
+  useEffect(() => {  
     if (!search) return;
     if (!searchData || searchPending) return; // esperamos a que cargue
     if (searchOffset >= 1300) return;
@@ -99,8 +104,6 @@ export default function Cards() {
       // ✅ encontramos resultados o llegamos al límite
       setSearchResult(filteredData);
       setIsSearching(false);
-
-      SetSearchCache(searchData);
     } else {
       // 🚀 seguimos buscando en la siguiente página
       setSearchOffset((prev) => prev + 100);
@@ -138,7 +141,7 @@ export default function Cards() {
           pokemons.map((el) => <Card key={el.url} url={el.url} />)}
         {isPending && (
           <>
-            {searchCache!=searchData && <Spinner message={"Cargando"}  containerOptions={{position:"fixed",bottom:10}}/>}
+            {<Spinner message={"Cargando"}  containerOptions={{position:"fixed",bottom:10}}/>}
             {error?.err && <p>Error:</p>}
           </>
         )}
