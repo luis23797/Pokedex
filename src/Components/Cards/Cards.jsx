@@ -20,10 +20,12 @@ export default function Cards() {
   const [searchOffset, setSearchOffset] = useState(0);
   const loaderRef = useRef(null);
   const [search, setSearch] = useState();
+  const searchRef = useRef();
+  const [startSearch,setStartSearch] = useState(true);
   const { data, isPending, error } = useFetch(
     `${baseUrl}?limit=${limit}&offset=${offset}`
   );
-  const debounceSearch = useDebounce(search,900);
+  const debounceSearch = useDebounce(search, 900);
   // const searchUrl = debounceSearch ? `${baseUrl}?limit=100&offset=${searchOffset}` : null;
   const searchUrl = `${baseUrl}?limit=100&offset=${searchOffset}`;
   const {
@@ -37,15 +39,16 @@ export default function Cards() {
   const [currentData, setCurrentData] = useState([]);
   const offsetRef = useRef(offset);
 
-
   useEffect(() => {
     offsetRef.current = offset; // sincroniza cada vez que offset cambie
   }, [offset]);
 
+  
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if(search){
+        
+        if (searchRef.current) {
           return;
         }
         if (entries[0].isIntersecting && offsetRef.current + limit < 1300) {
@@ -75,31 +78,37 @@ export default function Cards() {
   }, [data]);
   const [isSearching, setIsSearching] = useState(false);
 
-  // en Cards.jsx
+  // Banderas para busqueda y  ajuste de offset
   useEffect(() => {
+    searchRef.current = search;
     if (!search) {
       setIsSearching(false);
       return;
     }
-    setIsSearching(true);
-    setSearchOffset(0);
-    setSearchResult([]);
+    if (!isSearching) {
+      setIsSearching(true);
+      setSearchResult([]);
+    }
+
   }, [search]);
 
   //-------------------------------------------- Pruebas----------------------------------------------------------------------------------
-  useEffect(()=>{
-    console.log(debounceSearch);
-    
-  },[debounceSearch]) 
+  useEffect(() => {
+    setSearchOffset(0);
+    setStartSearch(prev=>!prev);
+  }, [debounceSearch]);
 
-  useEffect(() => {  
+  useEffect(() => {
     if (!search) return;
-    if (!searchData || searchPending) return; // esperamos a que cargue
-    if (searchOffset >= 1300) return;
-
+    if (searchOffset >= 1300) {
+      setIsSearching(false);
+      return;
+    }
     const filteredData = searchData.results.filter((p) =>
       p.name.toLowerCase().includes(search.toLowerCase())
     );
+ 
+    
     if (filteredData.length > 0) {
       // ✅ encontramos resultados o llegamos al límite
       setSearchResult(filteredData);
@@ -108,7 +117,7 @@ export default function Cards() {
       // 🚀 seguimos buscando en la siguiente página
       setSearchOffset((prev) => prev + 100);
     }
-  }, [searchData, debounceSearch]);
+  }, [searchData,startSearch]);
 
   useEffect(() => {
     if (!searchPending) {
@@ -131,17 +140,24 @@ export default function Cards() {
     <>
       <Search setSearch={setSearch} />
       <div className={`cards-container`} ref={cards}>
-        {search && isSearching && <Spinner message={"Buscando Pokemon"}/>}
+        {search && isSearching && <Spinner message={"Buscando Pokemon"} />}
 
         {search && !isSearching && pokemons.length === 0 && (
-          <div style={{width:"100%",textAlign:"center"}}>No se encontraron Pokemons {search}</div>
+          <div style={{ width: "100%", textAlign: "center" }}>
+            No se encontraron Pokemons {search}
+          </div>
         )}
         {pokemons.length > 0 &&
           !isSearching &&
           pokemons.map((el) => <Card key={el.url} url={el.url} />)}
         {isPending && (
           <>
-            {<Spinner message={"Cargando"}  containerOptions={{position:"fixed",bottom:10}}/>}
+            {
+              <Spinner
+                message={"Cargando"}
+                containerOptions={{ position: "fixed", bottom: 10 }}
+              />
+            }
             {error?.err && <p>Error:</p>}
           </>
         )}
